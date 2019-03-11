@@ -2,24 +2,11 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const list = [
-    {
-      title: 'React',
-      url: 'https://reactjs.org/',
-      author: 'Jordan Walke',
-      num_comments: 3,
-      points: 4,
-      objectID: 0,
-    },
-    {
-      title: 'Redux',
-      url: 'https://redux.js.org/',
-      author: 'Dan Abramov, Andrew Clark',
-      num_comments: 2,
-      points: 5,
-      objectID: 1,
-    },
-  ]
+const DEFAULT_QUERY = 'redux';
+
+const PATH_BASE = 'https://hn.algolia.com/api/v1';
+const PATH_SEARCH = '/search';
+const PARAM_SEARCH = 'query='; 
 
 const isSearched = (searchTerm) => {
   return (item) => {
@@ -33,22 +20,37 @@ class App extends Component {
     super(props); 
 
     this.state = {
-      list,
-      searchTerm: '',
+      list: null,
+      searchTerm: DEFAULT_QUERY,
     }
     // this.onDismiss = this.onDismiss.bind(this);
   }
 
   onDismiss = (id) => {
-    const updatedList = this.state.list.filter((value) => {
+    const updatedHits = this.state.list.hits.filter((value) => {
       return id != value.objectID; 
     });
 
-    this.setState({ list: updatedList });
+    this.setState({ 
+      list: { ...this.state.list, hits: updatedHits } 
+    });
   }
 
   onSearchChange = (event) => {
     this.setState({ searchTerm: event.target.value }); 
+  }
+
+  setSearchTopStories = (result) => {
+    this.setState({ list: result });
+  }
+
+  componentDidMount() {
+    const { searchTerm } = this.state;
+
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${DEFAULT_QUERY}`)
+      .then(response => response.json())
+      .then(result => { console.log("result", result); this.setSearchTopStories(result)})
+      .catch(error => error); 
   }
 
   render() {
@@ -62,11 +64,13 @@ class App extends Component {
             onChange={this.onSearchChange} 
           >Search:</Search>
         </div>
-        <Table 
-          list={list} 
-          pattern={searchTerm} 
-          onDismiss={this.onDismiss} 
-        />
+        { list && 
+          <Table 
+            list={list.hits} 
+            pattern={searchTerm} 
+            onDismiss={this.onDismiss} 
+          />
+        }
       </div>
     );
   }
