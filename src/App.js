@@ -7,6 +7,7 @@ const DEFAULT_QUERY = 'redux';
 const PATH_BASE = 'https://hn.algolia.com/api/v1';
 const PATH_SEARCH = '/search';
 const PARAM_SEARCH = 'query='; 
+const PARAM_PAGE = 'page='; 
 
 const isSearched = (searchTerm) => {
   return (item) => {
@@ -20,75 +21,103 @@ class App extends Component {
     super(props); 
 
     this.state = {
-      list: null,
+      result: null,
       searchTerm: DEFAULT_QUERY,
     }
     // this.onDismiss = this.onDismiss.bind(this);
   }
 
   onDismiss = (id) => {
-    const updatedHits = this.state.list.hits.filter((value) => {
+    const updatedHits = this.state.result.hits.filter((value) => {
       return id != value.objectID; 
     });
 
     this.setState({ 
-      list: { ...this.state.list, hits: updatedHits } 
+      result: { ...this.state.result, hits: updatedHits } 
     });
   }
 
-  onSearchChange = (event) => {
+  onSearchSubmit = (event) => {
+    const { searchTerm } = this.state;
+    this.fetchTopStories(searchTerm);
+    event.preventDefault();
+  }
+
+  onChange = (event) => {
     this.setState({ searchTerm: event.target.value }); 
   }
 
   setSearchTopStories = (result) => {
-    this.setState({ list: result });
+    const { hits, page } = result;
+
+    const oldHits = page === 0 ? [] : this.state.result.hits; 
+    const updatedHits = [ ...oldHits, ...hits ];
+    
+    this.setState({ 
+      result: { hits: updatedHits, page } 
+    });
+  }
+
+  fetchTopStories = (searchTerm, page = 0) => {
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`)
+    .then(response => response.json())
+    .then(result => { console.log("result", result); this.setSearchTopStories(result)})
+    .catch(error => error); 
   }
 
   componentDidMount() {
     const { searchTerm } = this.state;
-
-    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${DEFAULT_QUERY}`)
-      .then(response => response.json())
-      .then(result => { console.log("result", result); this.setSearchTopStories(result)})
-      .catch(error => error); 
+    this.fetchTopStories(searchTerm); 
   }
 
   render() {
-    const { searchTerm, list } = this.state; 
+    const { searchTerm, result: result } = this.state; 
+    const page = (result && result.page) || 0; 
+
+    console.log("result", result);
+    
 
     return (
       <div className="page">
         <div className="interactions">
           <Search 
             searchTerm={searchTerm} 
-            onChange={this.onSearchChange} 
+            onSubmit={this.onSearchSubmit} 
+            onChange={this.onChange} 
           >Search:</Search>
         </div>
-        { list && 
+        { result && 
           <Table 
-            list={list.hits} 
-            pattern={searchTerm} 
+            result={result.hits} 
             onDismiss={this.onDismiss} 
           />
         }
+        <div className="interactions">
+          <Button onClick={() => this.fetchTopStories(searchTerm, page + 1)}>
+            More
+          </Button>
+        </div>
       </div>
     );
   }
 }
 
-const Search = ({ searchTerm, onChange, children }) => 
-  <form>
-    {children} <input 
+const Search = ({ searchTerm, onSubmit, onChange, children }) => 
+  <form onSubmit={onSubmit}>
+    <input 
       type="text"
       value={searchTerm}
       onChange={onChange}
     />
+    <button type="submit">
+      {children}
+    </button>
   </form>
     
 
-const Table = ({ list, pattern, onDismiss }) => 
+const Table = ({ result, onDismiss }) => 
   <div className="table">
-    {list.filter(isSearched(pattern)).map((item) => 
+    {result.map((item) => 
       <div key={item.objectID} className="table-row">
         <span style={{ width: '40%' }}>
           <a href={item.url}>{item.title}</a>
