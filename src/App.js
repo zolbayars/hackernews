@@ -11,6 +11,8 @@ const PARAM_PAGE = 'page=';
 
 class App extends Component {
 
+  _isMounted = false; 
+
   constructor(props){
     super(props); 
 
@@ -27,7 +29,7 @@ class App extends Component {
     const { hits, page } = results[searchKey]; 
 
     const updatedHits = hits.filter((value) => {
-      return id != value.objectID; 
+      return id !== value.objectID; 
     });
 
     this.setState({ 
@@ -76,8 +78,8 @@ class App extends Component {
 
   fetchTopStories = (searchTerm, page = 0) => {
     axios(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`)
-    .then(result => this.setSearchTopStories(result.data))
-    .catch(error => this.setState({ error: error })); 
+    .then(result => this._isMounted && this.setSearchTopStories(result.data))
+    .catch(error => this._isMounted && this.setState({ error: error })); 
   }
 
   needToSearchTopStories = (searchTerm) => {
@@ -85,9 +87,15 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true; 
+
     const { searchTerm } = this.state;
     this.setState({ searchKey: searchTerm });
     this.fetchTopStories(searchTerm); 
+  }
+
+  componentWillUnmount(){
+    this._isMounted = false; 
   }
 
   render() {
