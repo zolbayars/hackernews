@@ -9,73 +9,103 @@ const PATH_SEARCH = '/search';
 const PARAM_SEARCH = 'query='; 
 const PARAM_PAGE = 'page='; 
 
-const isSearched = (searchTerm) => {
-  return (item) => {
-    return item.title.toLowerCase().includes(searchTerm.toLowerCase()); 
-  }
-}
-
 class App extends Component {
 
   constructor(props){
     super(props); 
 
     this.state = {
-      result: null,
+      results: null,
+      searchKey: '',
       searchTerm: DEFAULT_QUERY,
     }
-    // this.onDismiss = this.onDismiss.bind(this);
   }
 
   onDismiss = (id) => {
-    const updatedHits = this.state.result.hits.filter((value) => {
+    const { results, searchKey } = this.state; 
+    const { hits, page } = results[searchKey]; 
+
+    const updatedHits = hits.filter((value) => {
       return id != value.objectID; 
     });
 
     this.setState({ 
-      result: { ...this.state.result, hits: updatedHits } 
+      results: {
+        ...results,
+        [searchKey]: { hits: updatedHits, page }
+      }  
     });
   }
 
   onSearchSubmit = (event) => {
     const { searchTerm } = this.state;
-    this.fetchTopStories(searchTerm);
+    this.setState({ searchKey: searchTerm });
+
+    if(this.needToSearchTopStories(searchTerm)){
+      this.fetchTopStories(searchTerm);
+    }
+    
     event.preventDefault();
   }
 
-  onChange = (event) => {
+  onSearchChange = (event) => {
     this.setState({ searchTerm: event.target.value }); 
   }
 
   setSearchTopStories = (result) => {
     const { hits, page } = result;
+    const { searchKey, results } = this.state;
 
-    const oldHits = page === 0 ? [] : this.state.result.hits; 
-    const updatedHits = [ ...oldHits, ...hits ];
+    const oldHits = results && results[searchKey] 
+      ? results[searchKey].hits 
+      : []; 
+
+    const updatedHits = [ 
+      ...oldHits, 
+      ...hits 
+    ];
     
     this.setState({ 
-      result: { hits: updatedHits, page } 
+      results: {
+        ...results,
+        [searchKey]: { hits: updatedHits, page }
+      }
     });
   }
 
   fetchTopStories = (searchTerm, page = 0) => {
     fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`)
     .then(response => response.json())
-    .then(result => { console.log("result", result); this.setSearchTopStories(result)})
+    .then(result => this.setSearchTopStories(result, searchTerm))
     .catch(error => error); 
+  }
+
+  needToSearchTopStories = (searchTerm) => {
+    return !this.state.results[searchTerm]; 
   }
 
   componentDidMount() {
     const { searchTerm } = this.state;
+    this.setState({ searchKey: searchTerm });
     this.fetchTopStories(searchTerm); 
   }
 
   render() {
-    const { searchTerm, result: result } = this.state; 
-    const page = (result && result.page) || 0; 
+    const { searchTerm, results, searchKey } = this.state; 
 
-    console.log("result", result);
+    const page = (
+      results && 
+      results[searchKey] && 
+      results[searchKey].page 
+    ) || 0; 
     
+    const list = (
+      results && 
+      results[searchKey] && 
+      results[searchKey].hits 
+    ) || []; 
+
+    console.log("list", list);
 
     return (
       <div className="page">
@@ -83,17 +113,17 @@ class App extends Component {
           <Search 
             searchTerm={searchTerm} 
             onSubmit={this.onSearchSubmit} 
-            onChange={this.onChange} 
+            onSearchChange={this.onSearchChange} 
           >Search:</Search>
         </div>
-        { result && 
+        { results && 
           <Table 
-            result={result.hits} 
+            result={list} 
             onDismiss={this.onDismiss} 
           />
         }
         <div className="interactions">
-          <Button onClick={() => this.fetchTopStories(searchTerm, page + 1)}>
+          <Button onClick={() => this.fetchTopStories(searchKey, page + 1)}>
             More
           </Button>
         </div>
@@ -102,12 +132,12 @@ class App extends Component {
   }
 }
 
-const Search = ({ searchTerm, onSubmit, onChange, children }) => 
+const Search = ({ searchTerm, onSubmit, onSearchChange, children }) => 
   <form onSubmit={onSubmit}>
     <input 
       type="text"
       value={searchTerm}
-      onChange={onChange}
+      onChange={onSearchChange}
     />
     <button type="submit">
       {children}
