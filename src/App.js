@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import axios from 'axios'; 
 import './App.css';
 
 const DEFAULT_QUERY = 'redux';
@@ -18,6 +18,7 @@ class App extends Component {
       results: null,
       searchKey: '',
       searchTerm: DEFAULT_QUERY,
+      error: null,
     }
   }
 
@@ -44,7 +45,7 @@ class App extends Component {
     if(this.needToSearchTopStories(searchTerm)){
       this.fetchTopStories(searchTerm);
     }
-    
+
     event.preventDefault();
   }
 
@@ -74,10 +75,9 @@ class App extends Component {
   }
 
   fetchTopStories = (searchTerm, page = 0) => {
-    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`)
-    .then(response => response.json())
-    .then(result => this.setSearchTopStories(result, searchTerm))
-    .catch(error => error); 
+    axios(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`)
+    .then(result => this.setSearchTopStories(result.data))
+    .catch(error => this.setState({ error: error })); 
   }
 
   needToSearchTopStories = (searchTerm) => {
@@ -91,7 +91,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey } = this.state; 
+    const { searchTerm, results, searchKey, error } = this.state; 
 
     const page = (
       results && 
@@ -116,8 +116,11 @@ class App extends Component {
             onSearchChange={this.onSearchChange} 
           >Search:</Search>
         </div>
-        { results && 
-          <Table 
+        { error 
+          ? <div className="interactions">
+            <p>Something went wrong.</p>
+          </div> 
+          : <Table 
             result={list} 
             onDismiss={this.onDismiss} 
           />
