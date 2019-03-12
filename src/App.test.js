@@ -29,13 +29,27 @@ describe('Search', () => {
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<Search>Search</Search>, div); 
+    ReactDOM.render(
+      <Search 
+        searchTerm='redux' 
+        onSubmit={() => {}}
+        onSearchChange={() => {}}
+      >
+        Search
+      </Search>,
+    div); 
     ReactDOM.unmountComponentAtNode(div);
   });
 
   test('has a valid snapshot', () => {
     const component = renderer.create(
-      <Search>Search</Search>
+      <Search 
+        searchTerm='redux' 
+        onSubmit={() => {}}
+        onSearchChange={() => {}}
+      >
+        Search
+      </Search>
     );
     const tree = component.toJSON(); 
     expect(tree).toMatchSnapshot(); 
@@ -47,13 +61,13 @@ describe('Button', () => {
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<Button>Click on me</Button>, div); 
+    ReactDOM.render(<Button onClick={() => {}}>Click on me</Button>, div); 
     ReactDOM.unmountComponentAtNode(div);
   });
 
   test('has a valid snapshot', () => {
     const component = renderer.create(
-      <Button>Click on me</Button>
+      <Button onClick={() => {}}>Click on me</Button>
     );
     const tree = component.toJSON(); 
     expect(tree).toMatchSnapshot(); 
@@ -61,7 +75,7 @@ describe('Button', () => {
 
   it('shows correct text', () => {
     const element = shallow(
-      <Button>Click on me</Button>
+      <Button onClick={() => {}}>Click on me</Button>
     );
 
     expect(element.text()).toContain('Click on me');

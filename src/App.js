@@ -144,19 +144,34 @@ class App extends Component {
   }
 }
 
-const Search = ({ searchTerm, onSubmit, onSearchChange, children }) => 
-  <form onSubmit={onSubmit}>
-    <input 
-      type="text"
-      value={searchTerm}
-      onChange={onSearchChange}
-    />
-    <button type="submit">
-      {children}
-    </button>
-  </form>
+class Search extends Component {
 
-Search.prototype = {
+  componentDidMount(){
+    if(this.input){
+      this.input.focus();
+    }
+  }
+
+  render(){
+    const { searchTerm, onSubmit, onSearchChange, children } = this.props; 
+
+    return (
+      <form onSubmit={onSubmit}>
+        <input 
+          type="text"
+          value={searchTerm}
+          onChange={onSearchChange}
+          ref={el => this.input = el}
+        />
+        <button type="submit">
+          {children}
+        </button>
+      </form>               
+    );
+  }
+} 
+
+Search.propTypes  = {
   searchTerm: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onSearchChange: PropTypes.func.isRequired,
@@ -192,7 +207,7 @@ const Table = ({ result, onDismiss }) =>
     )}
   </div>
 
-Table.prototype = {
+Table.propTypes  = {
   result: PropTypes.array.isRequired,
   onDismiss: PropTypes.func.isRequired,
 }
@@ -211,7 +226,7 @@ const Button = ({ onClick, className, children }) =>
     className: '',
   }
 
-Button.prototype = {
+Button.propTypes  = {
   onClick: PropTypes.func.isRequired,
   className: PropTypes.string,
   children: PropTypes.node.isRequired,
