@@ -11,6 +11,26 @@ const PATH_SEARCH = '/search';
 const PARAM_SEARCH = 'query='; 
 const PARAM_PAGE = 'page='; 
 
+const updateTopStories = (hits, page) => (prevState) => {
+  const { searchKey, results } = prevState;
+  const oldHits = results && results[searchKey] 
+    ? results[searchKey].hits 
+    : []; 
+
+  const updatedHits = [ 
+    ...oldHits, 
+    ...hits 
+  ];
+
+  return { 
+    results: {
+      ...results,
+      [searchKey]: { hits: updatedHits, page }
+    },
+    isLoading: false,
+  }
+}
+
 class App extends Component {
 
   _isMounted = false; 
@@ -60,24 +80,7 @@ class App extends Component {
 
   setSearchTopStories = (result) => {
     const { hits, page } = result;
-    const { searchKey, results } = this.state;
-
-    const oldHits = results && results[searchKey] 
-      ? results[searchKey].hits 
-      : []; 
-
-    const updatedHits = [ 
-      ...oldHits, 
-      ...hits 
-    ];
-    
-    this.setState({ 
-      results: {
-        ...results,
-        [searchKey]: { hits: updatedHits, page }
-      },
-      isLoading: false,
-    });
+    this.setState(updateTopStories(hits, page));
   }
 
   fetchTopStories = (searchTerm, page = 0) => {
@@ -140,12 +143,11 @@ class App extends Component {
           />
         }
         <div className="interactions">
-          { isLoading ? 
-            <Loading /> : 
-            <Button onClick={() => this.fetchTopStories(searchKey, page + 1)}>
-              More
-            </Button>
-          }
+          
+          <ButtonWithLoading isLoading={isLoading} onClick={() => this.fetchTopStories(searchKey, page + 1)}>
+            More
+          </ButtonWithLoading>
+          
         </div>
       </div>
     );
@@ -243,6 +245,13 @@ Button.propTypes  = {
 const Loading = () =>
   <img src={loadingImg} width="50" alt="Loading"/>
     
+const withLoading = (Component) => ({ isLoading, ...rest }) => 
+  isLoading ? 
+    <Loading/> : 
+    <Component { ...rest} />
+
+
+const ButtonWithLoading = withLoading(Button); 
 
 export default App;
 
