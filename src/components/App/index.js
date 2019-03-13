@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import axios from 'axios'; 
-import PropTypes from 'prop-types';
-import loadingImg from './loading.svg';
-import './App.css';
+import Button from './../Button';
+import Search from './../Search';
+import Table from './../Table';
+import loadingImg from '../../assets/loading.svg';
+import './index.css';
+import './index.css';
 
-const DEFAULT_QUERY = 'redux';
-
-const PATH_BASE = 'https://hn.algolia.com/api/v1';
-const PATH_SEARCH = '/search';
-const PARAM_SEARCH = 'query='; 
-const PARAM_PAGE = 'page='; 
+import {
+  DEFAULT_QUERY,
+  PATH_BASE,
+  PATH_SEARCH,
+  PARAM_SEARCH,
+  PARAM_PAGE,
+} from '../../constants';
 
 const updateTopStories = (hits, page) => (prevState) => {
   const { searchKey, results } = prevState;
@@ -154,94 +158,6 @@ class App extends Component {
   }
 }
 
-class Search extends Component {
-
-  componentDidMount(){
-    if(this.input){
-      this.input.focus();
-    }
-  }
-
-  render(){
-    const { searchTerm, onSubmit, onSearchChange, children } = this.props; 
-
-    return (
-      <form onSubmit={onSubmit}>
-        <input 
-          type="text"
-          value={searchTerm}
-          onChange={onSearchChange}
-          ref={el => this.input = el}
-        />
-        <button type="submit">
-          {children}
-        </button>
-      </form>               
-    );
-  }
-} 
-
-Search.propTypes  = {
-  searchTerm: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  onSearchChange: PropTypes.func.isRequired,
-  children: PropTypes.node.isRequired,
-}
-    
-
-const Table = ({ result, onDismiss }) => 
-  <div className="table">
-    {result.map((item) => 
-      <div key={item.objectID} className="table-row">
-        <span style={{ width: '40%' }}>
-          <a href={item.url}>{item.title}</a>
-        </span>
-        <span style={{ width: '30%' }}>
-          {item.author}
-        </span>
-        <span style={{ width: '10%' }}>
-          {item.num_comments}
-        </span>
-        <span style={{ width: '10%' }}>
-          {item.points}
-        </span>
-        <span style={{ width: '10%' }}>
-          <Button 
-            onClick={() => onDismiss(item.objectID)}
-            className="button-inline"
-          >
-            Dismiss
-          </Button>
-        </span>
-      </div>
-    )}
-  </div>
-
-Table.propTypes  = {
-  result: PropTypes.array.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-}
-
-
-const Button = ({ onClick, className, children }) => 
-  <button 
-    onClick={onClick}
-    type="button"
-    className={className} 
-  >
-    {children}
-  </button>
-
-  Button.defaultProps = {
-    className: '',
-  }
-
-Button.propTypes  = {
-  onClick: PropTypes.func.isRequired,
-  className: PropTypes.string,
-  children: PropTypes.node.isRequired,
-};
-
 const Loading = () =>
   <img src={loadingImg} width="50" alt="Loading"/>
     
@@ -250,13 +166,6 @@ const withLoading = (Component) => ({ isLoading, ...rest }) =>
     <Loading/> : 
     <Component { ...rest} />
 
-
 const ButtonWithLoading = withLoading(Button); 
 
 export default App;
-
-export {
-  Button,
-  Search,
-  Table,
-};
