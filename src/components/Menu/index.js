@@ -1,6 +1,10 @@
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import React, { Component } from 'react';
+import React from 'react';
 import { SearchedStoryList, RegularStoryList } from './../StoryList';
+
+function getRegularStoryList() {
+    return <RegularStoryList type="news"/>;
+}
 
 function Menu() {
     return (
@@ -17,7 +21,7 @@ function Menu() {
             </ul>
           </nav>
   
-          <Route path="/" exact component={RegularStoryList} />
+          <Route path="/" exact component={getRegularStoryList} />
           <Route path="/search/" component={SearchedStoryList} />
         </div>
       </Router>

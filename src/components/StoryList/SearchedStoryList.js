@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios'; 
 import Button from './../Button';
 import Search from './../Search';
-import Table from './../Table';
+import { SearchTable } from '../Table';
 import loadingImg from '../../assets/loading.svg';
 import './index.css';
 
@@ -137,7 +137,7 @@ class SearchedStoryList extends Component {
           ? <div className="interactions">
               <p>Something went wrong.</p>
             </div> 
-          : <Table 
+          : <SearchTable 
               result={list} 
               onDismiss={this.onDismiss} 
             />
