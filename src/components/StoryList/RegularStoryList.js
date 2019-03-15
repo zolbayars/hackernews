@@ -27,12 +27,30 @@ class RegularStoryList extends Component {
     componentDidMount(){
         this._isMounted = true; 
         this.fetchNewStories();
+        
+        document.addEventListener('scroll', this.trackScrolling);
     }
 
     componentWillUnmount(){
         this._isMounted = false; 
+
+        document.removeEventListener('scroll', this.trackScrolling);
+    }
+    
+    isBottom(el) {
+        return el.getBoundingClientRect().bottom <= window.innerHeight;
     }
 
+    trackScrolling = () => {
+        const { type, isLoading } = this.state; 
+        const wrappedElement = document.getElementById(type);
+        if (this.isBottom(wrappedElement) && !isLoading) {
+            
+            this.fetchMoreItems();
+            document.removeEventListener('scroll', this.trackScrolling);
+        }
+    };
+      
     handleRegularStories = (result) => {
         const { storyIDBeginning, storyIDEnding } = this.state; 
         this.setState({ storyIDs: result });
@@ -43,7 +61,7 @@ class RegularStoryList extends Component {
 
     handleItemDetail = (story) => {
         console.log("handleItemDetail", story);
-        this.setState((prevState) => prevState.stories.push(story)); 
+        this.setState((prevState) => ({ stories: [ ...prevState.stories, story] })); 
     }
 
     fetchNewStories = () => {
@@ -55,21 +73,37 @@ class RegularStoryList extends Component {
       }
     
     fetchItemDetail = (itemId, isLast) => {
+        console.log("fetchItemDetail");
         axios(`${Constants.PATH_BASE_ORIGINAL}${Constants.PATH_ITEM}/${itemId}.json`)
         .then(result => {
             if(this._isMounted){
-                this.handleItemDetail(result.data)
-                isLast && this.setState({ isLoading: false });
+                
+                this.handleItemDetail(result.data);
+                this.setState((prevState) => ({
+                    storyIDEnding: prevState.storyIDEnding + 1,
+                    storyIDBeginning: prevState.storyIDBeginning + 1,
+                }));
+                if(isLast){
+                    this.setState({ isLoading: false });
+                    document.addEventListener('scroll', this.trackScrolling);
+                }
             } 
         })
         .catch(error => this._isMounted && this.setState({ error: error })); 
     }
 
+    fetchMoreItems = () => {
+        const { storyIDBeginning, storyIDs } = this.state; 
+        const slicedIDs = storyIDs.slice(storyIDBeginning, storyIDBeginning + Constants.SCROLL_LOAD_COUNT); 
+        
+        slicedIDs.forEach((id, index, arr) => this.fetchItemDetail(id, index === (arr.length - 1)));
+    }
+
     render() {
-        const { error, stories, isLoading } = this.state; 
+        const { error, stories, isLoading, type } = this.state; 
         
         return (
-            <div className="page">
+            <div className="page" id={type}>
                 { error 
                     ? <div className="interactions">
                         <p>Something went wrong.</p>

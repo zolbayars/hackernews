@@ -8,6 +8,7 @@ const Constants = {
     PATH_NEWS_STORIES: '/topstories.json',
     PATH_ITEM: '/item',
     STORY_COUNT: 20,
+    SCROLL_LOAD_COUNT: 10,
 }
 
 export default Constants; 
