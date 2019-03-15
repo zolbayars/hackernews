@@ -13,6 +13,7 @@ exports[`App has a valid snapshot 1`] = `
       <input
         onChange={[Function]}
         type="text"
+        value=""
       />
       <button
         type="submit"
@@ -27,11 +28,13 @@ exports[`App has a valid snapshot 1`] = `
   <div
     className="interactions"
   >
-    <img
-      alt="Loading"
-      src="loading.svg"
-      width="50"
-    />
+    <button
+      className=""
+      onClick={[Function]}
+      type="button"
+    >
+      More
+    </button>
   </div>
 </div>
 `;
