@@ -1,5 +1,5 @@
 const Constants = {
-    DEFAULT_QUERY: 'mongo',
+    DEFAULT_QUERY: '',
     PATH_BASE: 'https://hn.algolia.com/api/v1',
     PATH_SEARCH: '/search',
     PARAM_SEARCH: 'query=', 

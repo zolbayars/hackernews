@@ -28,7 +28,7 @@ const updateTopStories = (hits, page) => (prevState) => {
   }
 }
 
-class App extends Component {
+class SearchedStoryList extends Component {
 
   _isMounted = false; 
 
@@ -36,7 +36,7 @@ class App extends Component {
     super(props); 
 
     this.state = {
-      results: null,
+      results: [],
       searchKey: '',
       searchTerm: Constants.DEFAULT_QUERY,
       error: null,
@@ -96,14 +96,10 @@ class App extends Component {
   componentDidMount() {
     this._isMounted = true; 
 
-    const { searchTerm } = this.state;
-    this.setState({ searchKey: searchTerm });
+    // const { searchTerm } = this.state;
+    // this.setState({ searchKey: searchTerm });
 
-    // if(searchTerm !== ''){
-      this.fetchSearchedStories(searchTerm); 
-    // }else{
-    //   this.fetchNewsStories(); 
-    // }
+    // this.fetchSearchedStories(searchTerm); 
   }
 
   componentWillUnmount(){
@@ -168,4 +164,4 @@ const withLoading = (Component) => ({ isLoading, ...rest }) =>
 
 const ButtonWithLoading = withLoading(Button); 
 
-export default App;
+export default SearchedStoryList;

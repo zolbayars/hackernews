@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { SearchedStoryList, RegularStoryList } from './../StoryList';
+import Menu from '../Menu';
 
 class App extends Component {
   constructor(props){
@@ -8,7 +9,9 @@ class App extends Component {
 
   render(){
     return (
-      <SearchedStoryList/>
+      <div>
+        <Menu/>
+      </div>
     );
   }
 }

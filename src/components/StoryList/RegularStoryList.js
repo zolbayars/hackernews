@@ -7,7 +7,7 @@ import loadingImg from '../../assets/loading.svg';
 
 import Constants from '../../constants';
 
-class StoryList extends Component {
+class RegularStoryList extends Component {
     constructor(props){
         super(props);
 
@@ -37,15 +37,17 @@ class StoryList extends Component {
         .catch(error => this._isMounted && this.setState({ error: error })); 
       }
     
-      fetchItemDetail = (itemId) => {
+    fetchItemDetail = (itemId) => {
         axios(`${Constants.PATH_BASE_ORIGINAL}${Constants.PATH_ITEM}/${itemId}.json`)
         .then(result => this._isMounted && this.handleItemDetail(result.data))
         .catch(error => this._isMounted && this.setState({ error: error })); 
-      }
+    }
 
     render() {
-        return
+        return(
+            <h1>Regular Story List</h1>
+        );
     }
 }
 
-export default StoryList; 
+export default RegularStoryList; 
