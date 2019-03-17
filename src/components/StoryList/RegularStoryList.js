@@ -66,8 +66,21 @@ class RegularStoryList extends Component {
 
     fetchNewStories = () => {
         this.setState({ isLoading: true }); 
+
+        let storyURL = ''; 
+        switch(this.state.type){
+            case 'best':
+                storyURL = Constants.PATH_BEST_STORIES; 
+                break; 
+            case 'top':
+                storyURL = Constants.PATH_TOP_STORIES; 
+                break; 
+            default:
+                storyURL = Constants.PATH_NEWS_STORIES;
+                break; 
+        }
         
-        axios(`${Constants.PATH_BASE_ORIGINAL}${Constants.PATH_NEWS_STORIES}`)
+        axios(`${Constants.PATH_BASE_ORIGINAL}${storyURL}`)
         .then(result => this._isMounted && this.handleRegularStories(result.data))
         .catch(error => this._isMounted && this.setState({ error: error })); 
       }

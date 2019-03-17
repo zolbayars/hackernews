@@ -6,6 +6,14 @@ function getRegularStoryList() {
     return <RegularStoryList type="news"/>;
 }
 
+function getTopStoryList() {
+    return <RegularStoryList type="top"/>;
+}
+
+function getBestStoryList() {
+    return <RegularStoryList type="best"/>;
+}
+
 function Menu() {
     return (
       <Router>
@@ -16,6 +24,12 @@ function Menu() {
                 <Link to="/">Home</Link>
               </li>
               <li>
+                <Link to="/best">Best</Link>
+              </li>
+              <li>
+                <Link to="/top">Top</Link>
+              </li>
+              <li>
                 <Link to="/search/">Search</Link>
               </li>
             </ul>
@@ -23,6 +37,8 @@ function Menu() {
   
           <Route path="/" exact component={getRegularStoryList} />
           <Route path="/search/" component={SearchedStoryList} />
+          <Route path="/best/" component={getBestStoryList} />
+          <Route path="/top/" component={getTopStoryList} />
         </div>
       </Router>
     );
