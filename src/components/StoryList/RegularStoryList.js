@@ -75,6 +75,15 @@ class RegularStoryList extends Component {
             case 'top':
                 storyURL = Constants.PATH_TOP_STORIES; 
                 break; 
+            case 'ask':
+                storyURL = Constants.PATH_ASK_STORIES; 
+                break; 
+            case 'show':
+                storyURL = Constants.PATH_SHOW_STORIES; 
+                break; 
+            case 'job':
+                storyURL = Constants.PATH_JOB_STORIES; 
+                break; 
             default:
                 storyURL = Constants.PATH_NEWS_STORIES;
                 break; 

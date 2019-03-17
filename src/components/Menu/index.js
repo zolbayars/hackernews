@@ -14,6 +14,18 @@ function getBestStoryList() {
     return <RegularStoryList type="best"/>;
 }
 
+function getAskStoryList() {
+    return <RegularStoryList type="ask"/>;
+}
+
+function getShowStoryList() {
+    return <RegularStoryList type="show"/>;
+}
+
+function getJobStoryList() {
+    return <RegularStoryList type="job"/>;
+}
+
 function Menu() {
     return (
       <Router>
@@ -30,6 +42,15 @@ function Menu() {
                 <Link to="/top">Top</Link>
               </li>
               <li>
+                <Link to="/ask">Ask</Link>
+              </li>
+              <li>
+                <Link to="/job">Job</Link>
+              </li>
+              <li>
+                <Link to="/show">Show</Link>
+              </li>
+              <li>
                 <Link to="/search/">Search</Link>
               </li>
             </ul>
@@ -39,6 +60,9 @@ function Menu() {
           <Route path="/search/" component={SearchedStoryList} />
           <Route path="/best/" component={getBestStoryList} />
           <Route path="/top/" component={getTopStoryList} />
+          <Route path="/job/" component={getJobStoryList} />
+          <Route path="/ask/" component={getAskStoryList} />
+          <Route path="/show/" component={getShowStoryList} />
         </div>
       </Router>
     );
