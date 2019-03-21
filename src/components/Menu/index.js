@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import React from 'react';
 import { SearchedStoryList, RegularStoryList } from './../StoryList';
+import UserDetail from "../User/UserDetail";
 
 function getRegularStoryList() {
     return <RegularStoryList type="news"/>;
@@ -24,6 +25,14 @@ function getShowStoryList() {
 
 function getJobStoryList() {
     return <RegularStoryList type="job"/>;
+}
+
+function getUserDetail({ match }) {
+  console.log(match);
+  
+  return (
+    <UserDetail id={match.params.id}/>
+  );
 }
 
 function Menu() {
@@ -63,6 +72,7 @@ function Menu() {
           <Route path="/job/" component={getJobStoryList} />
           <Route path="/ask/" component={getAskStoryList} />
           <Route path="/show/" component={getShowStoryList} />
+          <Route path="/user/:id" component={getUserDetail} />
         </div>
       </Router>
     );

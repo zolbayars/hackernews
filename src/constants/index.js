@@ -11,6 +11,7 @@ const Constants = {
     PATH_ASK_STORIES: '/askstories.json',
     PATH_JOB_STORIES: '/jobstories.json',
     PATH_SHOW_STORIES: '/showstories.json',
+    PATH_USER_DETAIL: '/user/',
     PATH_ITEM: '/item',
     STORY_COUNT: 20,
     SCROLL_LOAD_COUNT: 10,
