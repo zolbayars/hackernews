@@ -15,7 +15,8 @@ class UserDetail extends Component {
             userID: props.id,
             userData: null, 
             isLoading: false, 
-            error: null, 
+            isListLoading: false, 
+            error: null,
         }
     }
 
@@ -41,12 +42,28 @@ class UserDetail extends Component {
         userDataClean.created = result && result.created && (new Date(result.created * 1000)).toString();  
 
         this.setState({ userData: userDataClean, isLoading: false })
+
+        this.fetchUserSubmits(result.submitted); 
+    }
+
+    fetchUserSubmits = (submittedList) => {
+        this.setState({ isListLoading: true }); 
+
+        submittedList.forEach((id) => {
+            axios(`${Constants.PATH_BASE_ORIGINAL}${Constants.PATH_ITEM}/${id}.json`)
+            .then(result => this._isMounted && this.handleSubmissionResult(result.data))
+            .catch(error => this._isMounted && this.setState({ error: error }));                                    
+        });
+        
+    }
+
+    handleSubmissionResult = (result) => {
+        console.log(result);
     }
 
     render(){
 
-        const { userData, error, isLoading } = this.state; 
-        console.log(isLoading);
+        const { userData, error, isLoading, isListLoading } = this.state; 
         
         return(
             <div className="user-detail-container">

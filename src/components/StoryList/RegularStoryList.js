@@ -60,7 +60,6 @@ class RegularStoryList extends Component {
     }
 
     handleItemDetail = (story) => {
-        console.log("handleItemDetail", story);
         this.setState((prevState) => ({ stories: [ ...prevState.stories, story] })); 
     }
 
