@@ -13,7 +13,9 @@ class UserDetail extends Component {
 
         this.state = {
             userID: props.id,
-            userData: null, 
+            userData: null,
+            userSubmissions: [],
+            submissionOffset: 0,
             isLoading: false, 
             isListLoading: false, 
             error: null,
@@ -48,17 +50,24 @@ class UserDetail extends Component {
 
     fetchUserSubmits = (submittedList) => {
         this.setState({ isListLoading: true }); 
+        const { submissionOffset } = this.state; 
 
-        submittedList.forEach((id) => {
-            axios(`${Constants.PATH_BASE_ORIGINAL}${Constants.PATH_ITEM}/${id}.json`)
+        for(let i = submissionOffset; i < submissionOffset + Constants.USER_SUBMISSION_COUNT; i++){
+            axios(`${Constants.PATH_BASE_ORIGINAL}${Constants.PATH_ITEM}/${submittedList[i]}.json`)
             .then(result => this._isMounted && this.handleSubmissionResult(result.data))
             .catch(error => this._isMounted && this.setState({ error: error }));                                    
-        });
-        
+        }
+
+        this.setState((prevState) => ({ submissionOffset: prevState.submissionOffset + Constants.USER_SUBMISSION_COUNT }));
     }
 
     handleSubmissionResult = (result) => {
         console.log(result);
+        
+        this.setState((prevState) => ({
+            userSubmissions: [ ...prevState.userSubmissions, result],
+        }));
+
     }
 
     render(){

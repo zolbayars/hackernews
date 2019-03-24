@@ -15,6 +15,7 @@ const Constants = {
     PATH_ITEM: '/item',
     STORY_COUNT: 20,
     SCROLL_LOAD_COUNT: 10,
+    USER_SUBMISSION_COUNT: 10,
 }
 
 export default Constants; 
