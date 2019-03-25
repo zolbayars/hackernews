@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios'; 
 import Constants from '../../constants'; 
 import UserInfoSection from './UserInfoSection'; 
-import LatestSubmissions from './LatestPosts'; 
+import LatestSubmissions from './LatestSubmissions'; 
 import loadingImg from '../../assets/loading.svg';
 
 class UserDetail extends Component {
