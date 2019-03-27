@@ -15,7 +15,7 @@ const StoryTable = ({ result }) =>
             <Link to={"/user/"+item.by}>{item.by}</Link>
           </span>
           <span style={{ width: '10%' }}>
-            {item.descendants}
+          <Link to={"/item/"+item.id}>{item.descendants}</Link>
           </span>
           <span style={{ width: '10%' }}>
             {item.score}

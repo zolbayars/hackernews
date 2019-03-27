@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import React from 'react';
 import { SearchedStoryList, RegularStoryList } from './../StoryList';
 import UserDetail from "../User/UserDetail";
+import ItemDetail from "../Item/ItemDetail";
 
 function getRegularStoryList() {
     return <RegularStoryList type="news"/>;
@@ -28,12 +29,17 @@ function getJobStoryList() {
 }
 
 function getUserDetail({ match }) {
-  console.log(match);
-  
   return (
     <UserDetail id={match.params.id}/>
   );
 }
+
+function getItemDetail({ match }) {
+  return (
+    <ItemDetail id={match.params.id}/>
+  );
+}
+
 
 function Menu() {
     return (
@@ -73,6 +79,7 @@ function Menu() {
           <Route path="/ask/" component={getAskStoryList} />
           <Route path="/show/" component={getShowStoryList} />
           <Route path="/user/:id" component={getUserDetail} />
+          <Route path="/item/:id" component={getItemDetail} />
         </div>
       </Router>
     );
