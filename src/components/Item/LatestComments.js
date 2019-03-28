@@ -10,7 +10,7 @@ const LatestComments = ({ comments, commentTreeIds }) =>
 const Comment = ({ item, id, allComments }) => 
     <li key={id}>
         
-        {item.text}
+        <div dangerouslySetInnerHTML={{ __html: item.text }} />
         {item.kids ?
             <ul> 
             { item.kids.map((kidId) => 
