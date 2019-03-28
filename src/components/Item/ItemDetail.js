@@ -15,9 +15,10 @@ class ItemDetail extends Component {
         this.state = {
             itemID: props.id,
             itemData: null,
-            comments: [],
-            commentOffset: 0,
+            comments: {},
+            commentTreeIds: [],
             isLoading: false, 
+            isCommentsLoading: true, 
             error: null,
         }
     }
@@ -40,58 +41,69 @@ class ItemDetail extends Component {
     }
 
     handleItemDetail = (result) => {
-        console.log(result);
+        console.log("item",result);
         
         let itemClean = result;
         itemClean.time = result && result.time && (new Date(result.time * 1000)).toString();  
 
         this.setState({ itemData: itemClean, isLoading: false })
 
-        // this.fetchUserSubmits(result.submitted); 
+        this.fetchComments(result.kids); 
     }
 
-    fetchUserSubmits = (submittedList) => {
-        const { commentOffset } = this.state; 
-        let limit = commentOffset + Constants.USER_SUBMISSION_COUNT; 
+    fetchComments = (commentList) => {
+        this.setState({ isCommentsLoading: true }); 
 
-        if(limit > submittedList.length){
-            limit = submittedList.length;
-        }
-
-        for(let i = commentOffset; i < limit; i++){
-            axios(`${Constants.PATH_BASE_ORIGINAL}${Constants.PATH_ITEM}/${submittedList[i]}.json`)
-            .then(result => this._isMounted && this.handleSubmissionResult(result.data))
+        commentList.forEach(element => {
+            axios(`${Constants.PATH_BASE_ORIGINAL}${Constants.PATH_ITEM}/${element}.json`)
+            .then(result => this._isMounted && this.handleCommentResult(result.data))
             .catch(error => this._isMounted && this.setState({ error: error }));                                    
-        }
-
-        this.setState((prevState) => {
-            let limit = prevState.commentOffset + Constants.USER_SUBMISSION_COUNT; 
-
-            if(limit > submittedList.length){
-                limit = submittedList.length;
-            }
-
-            return { commentOffset: limit }
         });
     }
 
-    handleSubmissionResult = (result) => {
-        console.log(result);
+    handleCommentResult = (result) => {
+        // console.log("handleCommentResult result", result);
         
         if(!result.deleted){
+
+            let commentResult = result; 
+
+            if(commentResult.kids){
+                this.fetchComments(commentResult.kids); 
+            }else{
+                // When a comment doesn't have any replies, the parameter just dissappears
+                commentResult.kids = []; 
+            }
+
             this.setState((prevState) => ({
-                comments: [ ...prevState.comments, result],
+                comments: { ...prevState.comments, [commentResult.id]: commentResult },
+                commentTreeIds: [ ...prevState.commentTreeIds, commentResult.id ]
             }));
+            
         }
 
+        const { itemData, comments } = this.state; 
+
+        // console.log("--- descendants", itemData.descendants);
+        // console.log("--- comments.length", comments.length);
+        
+        if(!itemData.descendants || (itemData.descendants === Object.keys(comments).length)){
+            this.setState({ isCommentsLoading: false }); 
+        }
     }
 
     render(){
 
-        const { itemData, error, isLoading, comments } = this.state; 
+        const { itemData, error, isLoading, isCommentsLoading, comments, commentTreeIds } = this.state; 
 
-        console.log("comments", comments);
-        
+        let kids = [];
+        if(itemData){
+            kids = itemData.kids; 
+        } 
+
+        console.log("comments from state", comments);
+        console.log("kids", kids);
+        console.log("isCommentsLoading", isCommentsLoading);
         
         return(
             <div className="user-detail-container">
@@ -102,9 +114,10 @@ class ItemDetail extends Component {
                 { error ? 
                     <h1>There was something wrong</h1> : 
                     <div className="latest-submissions-container">
-                        <h3>Latest Activity</h3>
+                        <h3>Comments</h3>
                         <ul>
-                            <LatestComments submissions={ comments }/>
+                            <LatestCommentsWithLoading isLoading={ isCommentsLoading } 
+                                comments={ comments } commentTreeIds={ kids }/>
                         </ul>
                     </div>
                 }       
@@ -122,5 +135,6 @@ const withLoading = (Component) => ({ isLoading, ...rest }) =>
     <Component { ...rest} />
 
 const UserInfoWithLoading = withLoading(ItemInfoSection); 
+const LatestCommentsWithLoading = withLoading(LatestComments); 
 
 export default ItemDetail; 

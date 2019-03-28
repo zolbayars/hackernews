@@ -1,20 +1,26 @@
 import React from 'react';
 
-const LatestComments = ({ submissions }) => 
+const LatestComments = ({ comments, commentTreeIds }) => 
     <div>
-        { submissions.map((item) => 
-            item.type === 'comment' ? <Comment item={item}/> : <Post item={item}/>
+        { commentTreeIds.map((id) => 
+            comments[id] ? <Comment item={comments[id]} key={id} allComments={comments}/> : ""
         )}
     </div>
 
-const Post = ({ item }) => 
-    <li key={item.id}>
-        Posted <a href={item.url}>{item.title}</a>
-    </li>
-
-const Comment = ({ item }) => 
-    <li key={item.id}>
-        Commented <a href={item.parent}>{item.text.substring(0, 50)}</a>
+const Comment = ({ item, id, allComments }) => 
+    <li key={id}>
+        
+        {item.text}
+        {item.kids ?
+            <ul> 
+            { item.kids.map((kidId) => 
+                allComments[kidId] ? <Comment item={allComments[kidId]} key={kidId} allComments={allComments}/> : ""
+            )}
+            </ul> :
+            ""
+        } 
+       
+        
     </li>
 
 export default LatestComments; 

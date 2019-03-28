@@ -9,11 +9,11 @@ a {
 a:hover {
   text-decoration: underline;
 }
-ul, li {
+/* ul, li {
   list-style: none;
   padding: 0;
   margin: 0;
-}
+} */
 input {
   padding: 10px;
   border-radius: 5px;
