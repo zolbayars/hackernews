@@ -62,7 +62,6 @@ class ItemDetail extends Component {
     }
 
     handleCommentResult = (result) => {
-        // console.log("handleCommentResult result", result);
         
         if(!result.deleted){
 

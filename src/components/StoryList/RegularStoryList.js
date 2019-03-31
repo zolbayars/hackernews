@@ -4,6 +4,8 @@ import axios from 'axios';
 import Constants from '../../constants';
 import { StoryTable } from '../Table/';
 
+import { StoryCards } from '../Card/';
+
 import loadingImg from '../../assets/loading.svg';
 
 class RegularStoryList extends Component {
@@ -147,6 +149,6 @@ const withLoading = (Component) => ({ isLoading, ...rest }) =>
     <Loading/> : 
     <Component { ...rest} />
 
-const TableWithLoading = withLoading(StoryTable); 
+const TableWithLoading = withLoading(StoryCards); 
 
 export default RegularStoryList; 

@@ -1,0 +1,31 @@
+@import '../../../node_modules/@material/react-card/dist/card.css';
+@import '../../../node_modules/@material/react-typography/dist/typography.css';
+@import '../../../node_modules/@material/react-button/dist/button.css';
+@import '../../../node_modules/@material/react-material-icon/dist/material-icon.css';
+@import '../../../node_modules/@material/react-icon-button/dist/icon-button.css';
+@import '../../../node_modules/@material/react-layout-grid/dist/layout-grid.css';
+
+.demo-card__primary {
+    padding: 1rem;
+}
+
+.demo-card__secondary {
+    padding: 0 1rem 8px;
+}
+
+.demo-card {
+    width: 400px;
+    margin: 0 0 1rem 1rem;
+}
+
+.mdc-typography--headline6 {
+    margin: 0;
+}
+
+.mdc-typography--subtitle2 {
+    margin: 0;
+}
+
+.mdc-typography--body2 {
+    margin: 0;
+}
