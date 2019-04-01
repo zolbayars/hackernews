@@ -83,18 +83,18 @@ class Menu extends Component {
   // }
   render(){
     return (
-      
+      <Router>
         <div>
           <Navbar fixed="top" bg="light" expand="lg">
-            <Navbar.Brand href="/">Tech News</Navbar.Brand>
+            <Navbar.Brand><Link to="/">Tech News</Link></Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
-                <Nav.Link href="/best">Best</Nav.Link>
-                <Nav.Link href="/top">Top</Nav.Link>
-                <Nav.Link href="/ask">Ask</Nav.Link>
-                <Nav.Link href="/job">Job</Nav.Link>
-                <Nav.Link href="/show">Show</Nav.Link>
+                <Nav.Link><Link to="/best">Best</Link></Nav.Link>
+                <Nav.Link><Link to="/top">Top</Link></Nav.Link>
+                <Nav.Link><Link to="/ask">Ask</Link></Nav.Link>
+                <Nav.Link><Link to="/job">Job</Link></Nav.Link>
+                <Nav.Link><Link to="/show">Show</Link></Nav.Link>
               </Nav>
               <Form inline>
                 <FormControl type="text" placeholder="Search" className="mr-sm-2" />
@@ -104,7 +104,7 @@ class Menu extends Component {
             
           </Navbar>
           <div className="content-container">
-            <Router>
+            
               <Container fluid="true">
                 <Row className="justify-content-lg-center">
                   <Route path="/" exact component={getRegularStoryList} />
@@ -118,9 +118,10 @@ class Menu extends Component {
                   <Route path="/item/:id" component={getItemDetail} />
                 </Row>
               </Container>
-            </Router>
+            
           </div>
         </div>
+      </Router>
     );
   }
   // render(){

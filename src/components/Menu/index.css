@@ -1,0 +1,7 @@
+.navbar-brand a {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.nav-link a {
+    color: rgba(0, 0, 0, 0.5);
+}
