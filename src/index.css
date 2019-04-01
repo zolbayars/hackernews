@@ -1,3 +1,50 @@
+@import '../node_modules/@material/react-drawer/dist/drawer.css';
+@import '../node_modules/@material/react-top-app-bar/dist/top-app-bar.css'; 
+@import '../node_modules/@material/react-list/dist/list.css'; 
+@import '../node_modules/bootstrap/dist/css/bootstrap.css';
+
 a:hover, a:visited, a:link, a:active {
     text-decoration: none;
 }
+
+.drawer-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    overflow: hidden;
+  }
+   
+  .drawer-app-content {
+    flex: auto;
+    overflow: auto;
+  }
+   
+  .top-app-bar-fix-adjust {
+    display: flex;
+    width: 100%;
+  }
+
+  .mdc-drawer--dismissible {
+    top: auto;
+  }
+
+  body {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .mdc-drawer-app-content {
+    flex: auto;
+    overflow: auto;
+    position: relative;
+  }
+  
+  .main-content {
+    overflow: auto;
+    height: 100%;
+  }
+  
+
+  .content-container {
+    margin-top: 4rem;
+  }

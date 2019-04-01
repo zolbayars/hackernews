@@ -1,9 +1,9 @@
 @import '../../../node_modules/@material/react-card/dist/card.css';
 @import '../../../node_modules/@material/react-typography/dist/typography.css';
-@import '../../../node_modules/@material/react-button/dist/button.css';
 @import '../../../node_modules/@material/react-material-icon/dist/material-icon.css';
 @import '../../../node_modules/@material/react-icon-button/dist/icon-button.css';
 @import '../../../node_modules/@material/react-layout-grid/dist/layout-grid.css';
+@import '../../../node_modules/@material/react-button/dist/button.css';
 
 .demo-card__primary {
     padding: 1rem;
